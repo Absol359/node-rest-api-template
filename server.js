@@ -33,11 +33,11 @@ app.post("/users", async function (req, res) {
     const { id, username, password, name, email } = req.body
 
     const connection = await getDBConnnection()
-    const sql = `INSERT INTO users (id, username, password, name, email) VALUES (?, ?, ?, ?, ?)`
-    const [result] = await connection.execute(sql, [id, username, password, name, email])
+    const sql = `INSERT INTO users (username, password, name, email) VALUES (?, ?, ?, ?)`
+    const [result] = await connection.execute(sql, [username, password, name, email])
 
     res.status(201).json({
-      message: "User created",
+      message: "User sucessfully created",
       userId: result.insertId || id,
     })
   } catch (err) {
