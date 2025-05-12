@@ -27,16 +27,23 @@ app.get("/", (req, res) => {
 /*
   app.post() hanterar en http request med POST-metoden.
 */
-app.post("/users", function (req, res) {
-  // Data som postats till routen ligger i body-attributet på request-objektet.
-  console.log(req.body)
 
-  // POST ska skapa något så här kommer det behövas en INSERT
-  let sql = `INSERT INTO users (id, username, password, name, email)`
-  .get 
-  app.post("/users , function(req , res)")
-  req.body
-  res.json(req.body)
+app.post("/users", async function (req, res) {
+  try {
+    const { id, username, password, name, email } = req.body
+
+    const connection = await getDBConnnection()
+    const sql = `INSERT INTO users (id, username, password, name, email) VALUES (?, ?, ?, ?, ?)`
+    const [result] = await connection.execute(sql, [id, username, password, name, email])
+
+    res.status(201).json({
+      message: "User created",
+      userId: result.insertId || id,
+    })
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: "Something went wrong!" })
+  }
 })
 
 
